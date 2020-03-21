@@ -4,7 +4,6 @@ import androidx.paging.PageKeyedDataSource
 
 class UsersDataSource : PageKeyedDataSource<Int, User>() {
 
-    private var currentPage = 0
     private var users: List<User>
 
     init {
@@ -16,15 +15,15 @@ class UsersDataSource : PageKeyedDataSource<Int, User>() {
         callback: LoadInitialCallback<Int, User>
     ) {
 
-        callback.onResult(getList(0), null, 1)
+        callback.onResult(getList(0, params.requestedLoadSize), null, 1)
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, User>) {
-        callback.onResult(getList(currentPage), currentPage--)
+        callback.onResult(getList(params.key, params.requestedLoadSize), params.key - 1)
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, User>) {
-        callback.onResult(getList(currentPage), currentPage++)
+        callback.onResult(getList(params.key, params.requestedLoadSize), params.key + 1)
     }
 
     private fun generateUser(): List<User> {
@@ -50,7 +49,8 @@ class UsersDataSource : PageKeyedDataSource<Int, User>() {
         return users.toList()
     }
 
-    fun getList(key: Int): List<User> {
-        return users.subList(10 * key, 10 * key + 20)
+    fun getList(key: Int, size: Int): List<User> {
+        if (key < 0) return users.subList(0, size)
+        return users.subList(size * key, size * key + size)
     }
 }
