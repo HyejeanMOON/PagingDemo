@@ -1,5 +1,5 @@
 # PagingDemo
-It's a android demo about paging
+It's an android demo about paging
 
 关于Paging组件的demo。(Paging+Network)  
 教程： https://juejin.im/post/5e75db1e51882549027687f1  
